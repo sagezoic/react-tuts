@@ -1,78 +1,67 @@
 ﻿# react-tuts
 
-# Episode 5
+# Episode 6
 - Topics:
-    - React File structure.
-    - 2 types of Import & Export: named & multiple
-    - what are React Hooks
-    - useState Hook.
-    - Virtual DOM
-    - Reconciliation Algorithm
-    - Diff Algorithm
-    - What is React Fiber
-    - React Fiber Architecture
+- Monolith Architecture.
+- Microservices.
+- useEffect Hook.
+- CORS Chrome Extension
+- Shimmer UI
+- Conditional Rendering
+- Reconciliation & Diff Algorithm.
+- OnChange handler.
+- Building a Search Functionality.
+- Working with the API data.
 
-- Today, we are going to learn another superpower of react
-- Everything React does can be done with the normal HTML, CSS, JS then why react?
-    - Using React you have to do less and make your development process easy, it will make you build apps fast.
-- Best Practice while coding is to make separate files for separate components.
-- Now, we will restructure our app and make our code more organized and break our code in multiple files.
-- You can use jsx/ tsx/ js extension.
-- First export then import components
-- import { Header } from './components/Header' or './components/Header.js/ jsx/ tsx both way it works';
+# Monolith Architecture
+- Everything in a single app
+- If you make any changes then whole app need to be re-build
+- Here generally, we have application written in one language.
 
-# Utils
-- Never ever keep hard coded data like resData or urls in component folder.
-- Try to keep all these kinds of things in a separate folder inside utils/ constant/ config/ common.
-- It means utilities that will be used all across the app
-- It's a good practice to give Constants name in upper-snake-case.
+# Microservices
+- All the services talk to each other depending upon the use cases
+- Notification, UI, Auth, Backend, Database, etc services.
+- Here we follow single responsibility principle, where each and every service have its own job. No, one is interfering with it.
+- Each and everything we have a different service. This is known as separation of concerns.
+- Here we can have microservices written in different languages and they are interacting with each other.
+- All services run there specific ports and domains E.g. /api:3333 for all apis, /sms:3334 for sms service.
+- How these services talk to each other?
+    - By calling
 
-# Default Export vs Named Export
-- Two types of imports:
-    - Default import/ export
-    - Named import/ export
-- In one file we only have one default export
-    - export default <name of function/ value>;
-    - import <component> from "path"
-- When you have to export multiple things from a file you go for named export
-    - export const <name_of_component>;
-    - import { component } from "path"
-    - export const LOGO_URL='';
-    - import { LOGO_URL } from './utils/constants'
-- Its convention that use default export for components until multiple components are being exported from a file.
-- Can I use both named and default exports together?
-    - 
-- It is always advised to keep your components clean, break your components in multiple files if it is exceeding 100 lines.
+# Fetching Data from Backend
+- Two ways
+    - 1. As soon as our app loads, make an API call and waits for the response and after that only UI will render
+    - 2. As soon as page loads, render UI and now make the API call and when API gives response then we will populate UI with that data
+- With React, we uses the second method because the second one is better approach and gives better UX. 
+- As React's render cycle is very fast so, rendering twice is not a problem.
 
-# Hooks
-- Now, we will make our app dynamic
-- Read about event handlers in JS and we do it in JS
-- React is fast in DOM manipulation, it do efficient DOM manipulation. And only because of it, it is able to make our App fast.
-- It would have been great if we have something as soon as our data array changes our UI gets automatically updated.
-- So, we have something to keep your data and UI layer consistent to each other. This is where React comes into picture. This is what all the frameworks are trying to solve.
-- To create State Variables - super powerful variables in React we use something called as hooks: useState() hook.
-- A react hook is a normal JS function which is given by react. It is pre-build in React. The only thing this function comes with certain logic which gives us super powers. It is a utility function given by React.
-- Whenever we say Hooks think it as a utility function. 
-- There are multiple React Hooks
-    - useState, useEffect most imp.
-    - useState() - gives super powerful react variables - It is called state variable because it maintains the state of the component
-    - useEffect() -
-- State Variable
-    - const [listOfRestaurants, setListOfRestaurants] = useState([]); convention in industry to name state set function set<name_of_state>.
-    - You don't modify the state variable directly.
-    - Whenever a state variable changes react will re-render component.
+# CORS Policy
+- Our browsers is not allow to call swiggy api from one host to another host i.e. localhost. This is CORS policy error.
+- https://www.youtube.com/watch?v=tcLW5d0KAYE
+- 
 
-# How React update UI upon State change?
-- Reconciliation Algorithm (React Fiber) introduced in React 16: It is a new to find the element and updating the DOM
-- Virtual DOM(React Elements) is the representation of actual DOM (tags)
-- Difference Algorithm : In this React tries to find the difference between the old and the new Virtual DOM and then calculate the difference and update the UI per render cycle
-- Finding difference between two HTMLs is slow but between two JS Objects is fast
-- Whenever there is change in any state variable, React will find the difference between the old and new DOM and it will re-render the component and update the DOM.
-- Incremental Rendering: The ability to split rendering work into chunks and spread it out over multiple frames. Efficient way of manipulating DOM.
-- Read about Reconciliation
-- As soon as you call the setListOfRestraunt react will find out the diff and update the UI accordingly. This is the core of React.
-So, the second return value from the useState() acts as a trigger to update the UI. That is why we needed two value for states.
+# Shimmer UI
+- We load a fake page until the data loads and that Real UI gets rendered.
+- The idea of shimmer UI is you want to show something to the user very quickly.
+- It is psychologically better. It doesn't give a impression that your website is slow.
 
-NOTE: React is FAST because it is doing efficient DOM Manipulation. Because it has a virtual DOM. Virtual DOM as a concept existed long back, it is just JS representation of actual DOM. React took that and built its own algorithm over that virtual DOM. So, react can efficiently find out the difference between Virtual DOMs and update the UI.
+# Conditional Rendering
+- If you have condition and you render according to the condition it is known as conditional rendering.
 
+# Why we have useState()?
+- If you make JS variable and try to make them dynamic, these variables will get updated but their updated values won't be get rendered on the UI, because we didn't created any mechanism for it to show on the UI. So, due to this we need React state variable, it will automatically update the UI as the state changes.
+- Why even having the const while declaring the useState() we are able to change the variable?
+    - It is happening because as soon as you update state variable using its set method, the set method internally calls the component with the updated value and this time when the component is rendering it creates a new variable with updated default value. So, this time the variable which is showing the updated state is not the same as showing old state. So, this is why we need state variables.
+- Whenever the state variable will be changed using the setBtnName, React will re-render the header component (Refresh the header component). It triggered the reconciliation cycle.
+- IMP: When a state changes in a component the whole component gets re-rendered not just the elements depending upon the state.
+![Alt text](image-1.png)
+- Rendering a component means calling the component once again.
+- When you click the Login button, react behind the scenes triggers the diff algo and compare the old and new header comp object and after seeing it only requires updation in button it do in the UI.
 
+# Search
+- The value of input box is tied to the searchText state variable so every time you type something in the input box it resets to the value set for the searchText.
+- So, we need a way so that searchText value can be updated as we type in the input box.
+- ONCE AGAIN: Whenever state variables update, react triggers a reconciliation cycle (re-renders the component).
+- So, whenever you are updating the searchText, react is refreshing the UI again and again, rendering body component. It is so fast that you are not even realizing it.
+![Alt text](image.png)
+- React is re-rendering the whole body component but it is only updating input box value inside the DOM.

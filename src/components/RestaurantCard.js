@@ -5,7 +5,7 @@ const styleCard = {
 };
 
 const RestaurantCard = (props)=>{
-    console.log(props);
+    // console.log(props);
     const { res } = props;
     // you could have used this way const RestaurantCard = ({ resName, cuisine })=>{}
 
@@ -25,7 +25,7 @@ const RestaurantCard = (props)=>{
             <h3>{name}</h3>
             <h4>{cuisines.join(", ")}</h4>
             <h4>{avgRating}</h4>
-            <h4>{aggregatedDiscountInfoV3.subHeader}</h4>
+            <h4>{aggregatedDiscountInfoV3?.subHeader}</h4>
             <h4>{sla.deliveryTime} minutes</h4>
         </div>
     );
