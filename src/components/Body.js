@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 
@@ -23,8 +25,9 @@ const Body = () => {
     setListOfRestaurants(
       json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
-    setFilteredRestaurants(json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-        );
+    setFilteredRestaurants(
+      json?.data?.cards[5]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
     //console.log(json.data.cards[5].card.card.gridElements.infoWithStyle.restaurants);
   };
 
@@ -46,7 +49,7 @@ const Body = () => {
             placeholder="KFC"
             value={searchText}
             onChange={(e) => {
-                setSearchText(e.target.value);
+              setSearchText(e.target.value);
             }}
           />
           <button
@@ -54,7 +57,11 @@ const Body = () => {
               // Filter the restaurant cards and update the UI
               // searchText
               console.log(searchText);
-              const filteredList = listOfRestaurants.filter((res)=>res.info.name.toLowerCase().includes(searchText.toLocaleLowerCase()));
+              const filteredList = listOfRestaurants.filter((res) =>
+                res.info.name
+                  .toLowerCase()
+                  .includes(searchText.toLocaleLowerCase())
+              );
               setFilteredRestaurants(filteredList);
             }}
           >
@@ -79,7 +86,9 @@ const Body = () => {
         {/* <RestaurantCard resName='Meghana Foods' cuisine='Biryani, North Indian, Asian'/>
                 <RestaurantCard resName='KFC' cuisine='Burger, Fast Food'/> Passing props to a component */}
         {filteredRestaurants?.map((res) => (
-          <RestaurantCard key={res.info.id} res={res} />
+          <Link key={res.info.id} to={"/restaurants/" + res.info.id}> {/**The key should be at parent where we are iterating */}
+            <RestaurantCard res={res} />
+          </Link>
         ))}
       </div>
     </div>
