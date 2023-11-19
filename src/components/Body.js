@@ -10,7 +10,7 @@ const Body = () => {
   const [searchText, setSearchText] = useState("");
 
   console.log("Body component rendering.....");
-  // This hook will be called after this component rendered.
+  // This hook will be called after this component rendered firstly.
   useEffect(() => {
     fetchData();
   }, []);

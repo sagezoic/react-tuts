@@ -123,6 +123,7 @@
 # Unmounting in Function based Components
 - To unmount a component in functional component you just have to return a function from useEffect and this function will be called before unmounting the component. This is the unmounting phase in the functional component.
 - render -> useEffect -> useEffect return
+NOTE: As soon as you call the set function given by useState() every time component gets re-rendered even you set the same value.
 
 # We are able to use async in componentDidMount() but why we can't use it in useEffect()?
 ![Alt text](image-1.png)
