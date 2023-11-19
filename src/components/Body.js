@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -36,6 +37,12 @@ const Body = () => {
   // if(listOfRestaurants?.length ===0){
   // return <Shimmer/>;
   // }
+
+  const onlineStatus = useOnlineStatus();
+
+  if (!onlineStatus) {
+    return <h1>Looks like you are offline! Check your internet connection.</h1>;
+  }
 
   return listOfRestaurants?.length === 0 ? (
     <Shimmer />
@@ -86,7 +93,9 @@ const Body = () => {
         {/* <RestaurantCard resName='Meghana Foods' cuisine='Biryani, North Indian, Asian'/>
                 <RestaurantCard resName='KFC' cuisine='Burger, Fast Food'/> Passing props to a component */}
         {filteredRestaurants?.map((res) => (
-          <Link key={res.info.id} to={"/restaurants/" + res.info.id}> {/**The key should be at parent where we are iterating */}
+          <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
+            {" "}
+            {/**The key should be at parent where we are iterating */}
             <RestaurantCard res={res} />
           </Link>
         ))}
