@@ -1,94 +1,129 @@
 ﻿# react-tuts
 
-# Episode 7
-- React Router.
-- React-router-dom
-- useRouteError Hook
-- Children Routes
-- Outlet Component.
-- Link Component
-- More about SPA's
-- UseParams Hook
-- Dynamic Routing
-- 2 types of Routing: Client Side Routing & Server-side Routing.
+# Episode 8
+- Class based components.
+- Creating our own Class based components.
+- Life cycle of Class based components.
+- React Lifecycle Methods.
 
-# useEffect Hook
-- arguments: callback fxn, dependency array
-- Every time the component is rendered useEffect is called but the dependency array changes the behavior of its render.
-- Only callback function is mandatory in useEffect, dependency array is optional.
-- If no dependency array that means useEffect is called on every render. It is the default nature of useEffect to be called after each render.
-- If the dependency array is empty [], then useEffect is called on initial render (just once).
-- If we put something inside dependency array, then useEffect is called every time dependency changes
+# Class Component
+- It is normal JS Class
+- This class is extends from React.Component
+- It has a function render() will the JSX which will be displayed on the browser screen.
+- A Function component is basically a function which returns a piece of JSX, whereas a Class Component is a class which extends React.Component and it has a render method which returns the JSX.
+- We consume the both components in same way.
+- Loading a class based component on browser is creating instance of a class.
+- To get props in class based component we have to get it in constructor
+    - constructor(props){
+        super(props);
 
-# useState Hook
-- useState is used to create local state variables inside functional components.
-- Try to call the useState() at the top (meant to be at the higher level, just below where your fxn starts), to make your code consistent and maintainable.
-- Never ever make create state variables outside your component.
-- Never create state variables inside conditional statements, loop, inner functions this can lead to inconsistency in your code.
+        console.log(props);
+    }
+    - Why do we require super(props)? Can we avoid it?
+        - 
 
-# React Router DOM
-- Install react-router-dom: npm install react-router-dom
-- For routing we will use this package
-- We will use it in the root level component (in our case it is App.js)
-- createBrowserRouter will create a routing configuration for us.
-- configuration means that some information that will define what will happen at specific route.
-- createBrowserRouter("takes_a_list_of_paths")
-- Each and every path object defines a path and what should happens on that path.
-- RouterProvider: Will provide the routing configuration to the app.
-- Earlier, we was rendering the AppLayout directly, now instead of this we will provide the router configuration. E.g. root.render(<RouterProvider router={appRouter} />) router prop takes the configuration.
-- That's it you just configured the routing.
-- This really easy as compared to the react-router-dom v5 where you have to enclose your root component inside browser router and create routes and do switching.
-- There are different routers provided by react-router-dom package E.g. createHashRouter, createBrowserRouter, createMemoryRouter, etc.
-- createBrowserRouter is the recommended router for all React Router web projects. It uses the DOM History API to update the URL and manage the history stack.
+    - To use props inside the render() you need to used this keyword. E.g. this.props.name
+- Creating state variables in Class Component
+    - State is created when you create instance of a class.
+    - Here we use state object to create a state variable. State object is collection of state variables (big object which contains all the states).
+    - this.state = {
+        count: 0,
+    };
+    - Updating the state variable: 
+        - Never update state variables directly
+        - We will use this.setState() to update the state.
 
-FUN FACT: You can use "rafce" for react functional component boiler plate.
+    - React re-render the component when state changes and only update the part which is being updated in the browser.
+    - batch update of states:
+        -   this.setState({
+                count: count+1,
+                count2: count2+1,
+            })
+    - React only updates the states which is being passed from the setState function. It will not touch other states in state object.
 
-# Error Handling Page
-- By default React router DOM gives you a 404 page and handles unexpected URLs.
-- add errorElement in your configuration (at root path) and you can handle the errors manually
+# Life Cycle of React Class based Components
+- When class component is mounted first constructor is called then render() is called.
+- Nested class component:
+    - Parent Constructor
+    - Parent Render
+    - Child Constructor
+    - Child Render
+- componentDidMount(): Given by React.Component to us. Once the render() is called after it this function is called (once component is mounted successfully on the browser).
+    - constructor -> render -> componentDidMount()
+    - parent constructor -> parent render -> child constructor -> child render -> child componentDidMount() -> parent componentDidMount()
+- componentDidMount is used to make API calls (very important use case).
+- Why API calls is made inside componentDidMount?
+    - Because we want to render the component as fast as possible and then make api call and after that re-render the component with filled data.
+    - We are not concerned with twice rendering as the reactDOM DOM manipulation capabilities is amazing and it do it so fast.
+    - loads->render->API->render (twice rendering of component)
+- Every parent/ child component in React goes through the lifecycle methods
+- What if we have multiple child components?
+    - parent constructor
+    - parent render
+        - child1 constructor
+        - child1 render
+        - child2 constructor
+        - child2 render
 
-# useRouteError Hook
-- Whenever a function starts with use, you know it is a Hook
-- This hook is given by react router dom for providing more information about the error. You can display better errors using it.
-- const err = useRouteError() // It give all the errors in path which are thrown and react router dom will catch and give it to us in this err object.
+        - child1 componentDidMount
+        - child2 componentDidMount
+    - parent componentDidMount
+- Why react behaved in above way, why componentDidMount for both the child called lastly?
+    - This was because in background react did optimization, react will batch the render phase(constructor+render) for all child and then commit phase(React updates DOM +  componentDidMount) will happen together. This is optimization of React. That is why the output is in this order.
+        - parent render phase
+            - child1 render phase
+            - child2 render phase
+            - DOM UPDATED IN SINGLE BATCH
+            - child1 componentDidMount
+            - child2 componentDidMount
+        - parent commit phase
 
-# Creating children routes
-- With this you can get the functionality that your header and footer will keep intact and your body will change.
-- You have give the children to the paths, and children will be list of children paths
-- Outlet: It is a component which will help us to render children according to paths. This is given by react router dom.
-- So, it is kind of a tunnel and according to path the children element comes to the outlet and it gets rendered.
-- I can have multiple parents and children and according to route Outlet will be filled.
-- You will not see the Outlet component in the console, this outlet component is replaced by a component according to route.
+    - After the render phase finished, React tries to update the DOM and DOM Manipulation is most expensive thing when we are updating a component (it takes lot of time). So, react want to batch the render phase and do DOM Update in a single batch.
+- React Life Cycle diagram
+    - https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
 
-# Link
-- When your are using React never use anchor tag for referencing cuz using anchor tag the whole page will get refreshed which is not desirable and lead to low performance.
-- I want to navigate to new page without reloading the page.
-- Link component given by react router dom have all the super power to do this. So, we will use it rather than ahref.
-- Link component works similar to anchor tag
-- Using link doesn't reload the whole page it just refreshes the components.
-- This is why we call react as single page application, here it is just changes the components rather than loading the whole page.
-- When you will inspect the Link in the HTML it is still an anchor tag. It means behind the scenes it is using anchor tag.
-- With link react-router-dom keeps the track of the 
+![Alt text](image.png)
 
-# Single Page Application
-- Its just one page and the components are getting interchanged via Client Side Routing.
+# API Calls in Class Component
+- We can make the componentDidMount function as async
+- Then inside it we can make a call to API
 
-# Routing in web apps
-- Two types:
-    - Client side routing
-    - Server side routing
-- In server side routing a complete new call goes to the server and server then sends the complete page and pages gets reloaded
-- In Client side routing we don't have to make network calls when we are navigating to a page, only the api calls is executed and here the component which is mapped to a route is loaded without making a network call as when the first time the app loads it already have all the components in it. 
+# Updating Cycle
+- componentDidUpdate()
+- This method is called after our component is updated with new values.
 
-Now, we will be building different pages for the different restaurants and we will learn dynamic routing through this exercise.
+# Unmounting Cycle
+- unmounting is disappearing from UI
+- componentWillUnmount() is used for unmounting
+- Just before the component will unmount, this function is called.
+- Use Case of component did unMount:
+    - While moving from one component to different in Single Page Application (SPA) we need to clear things up
+    - Let's take a example we wrote, setInterval() inside the componentDidMount(), setInterval will start to execute a job after a fixed interval. What if now we change page (component), then you will see the setInterval didn't stop it still keeps executing the job. It's a mess, and if you visited the component which have setInterval it will again start executed. So, now two setInterval is in action. We need some kind of cleanup before moving to next component. This is problem with SPA, it is happening because we are not reloading a page, we are just updating components in DOM.
+    - Do, call clearInterval(timer) in componentWillUnmount().
+    - Note: "this" keyword is shared with all the methods of the class.
 
-# Dynamic Routing
-- Depending
-- GraphQL is used to save yourself from nesting of data in api response like you saw in Swiggy Api. It helps you with over fetching of data.
+# Flow
+- Mounting LifeCycle
+    - Constructor (loaded state with dummy data)
+    - Render (with dummy data) : HTML Dummy
+    - Component Did Mount
+        - API Call
+        - this.setState -> State Variable is updated
+- Update LifeCycle
+    - render (API data) : HTML (new API Data)
+    - componentDidUpdate
+- Unmounting
+    - componentDidUnmount()
+
+# Going in depth for class based components
+- Remember this: Never ever compare react lifecycle methods to functional components.
+- Few people say useEffect() is similar to componentDidMount but it is not, there internals is different. Just because inside both we are making API calls doesn't make them similar.
+- In modern react code they have removed the concept of lifecycle methods, they don't want to get confused with all these methods.
+
+# Unmounting in Function based Components
+- To unmount a component in functional component you just have to return a function from useEffect and this function will be called before unmounting the component. This is the unmounting phase in the functional component.
+- render -> useEffect -> useEffect return
+
+# We are able to use async in componentDidMount() but why we can't use it in useEffect()?
+![Alt text](image-1.png)
 - 
-
-# useParams() Hook
-- to read path variables
-- given by react-router-dom
-
-NOTE: It always a good practice to keep all your apis in a constant folder.
