@@ -48,11 +48,11 @@ const Body = () => {
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex items-center justify-end">
+        <div className="mx-4">
           <input
             type="text"
-            className="search-box"
+            className="border border-solid border-black"
             placeholder="KFC"
             value={searchText}
             onChange={(e) => {
@@ -60,6 +60,7 @@ const Body = () => {
             }}
           />
           <button
+            className="px-4 py-2 bg-red-400 m-4 rounded-lg"
             onClick={() => {
               // Filter the restaurant cards and update the UI
               // searchText
@@ -74,9 +75,8 @@ const Body = () => {
           >
             Search
           </button>
-        </div>
-        <button
-          className="filter-btn"
+          <button
+          className="px-4 py-2 bg-gray-100 rounded-lg"
           onClick={() => {
             // Filter logic here
             const filteredList = listOfRestaurants.filter(
@@ -87,8 +87,9 @@ const Body = () => {
         >
           Top Rated Restaurant
         </button>
+        </div>
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap">
         {/* Restaurant Card */}
         {/* <RestaurantCard resName='Meghana Foods' cuisine='Biryani, North Indian, Asian'/>
                 <RestaurantCard resName='KFC' cuisine='Burger, Fast Food'/> Passing props to a component */}
