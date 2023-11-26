@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLable } from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const RestaurantCardPromoted = withPromotedLable(RestaurantCard);
   console.log("Body component rendering.....");
   // This hook will be called after this component rendered.
   useEffect(() => {
@@ -31,6 +33,8 @@ const Body = () => {
     );
     //console.log(json.data.cards[5].card.card.gridElements.infoWithStyle.restaurants);
   };
+  const {loggedInUser, setUserInfo} = useContext(UserContext);
+
 
   // Conditional Rendering
   // Lets club the below line of code with return
@@ -76,17 +80,21 @@ const Body = () => {
             Search
           </button>
           <button
-          className="px-4 py-2 bg-gray-100 rounded-lg"
-          onClick={() => {
-            // Filter logic here
-            const filteredList = listOfRestaurants.filter(
-              (res) => res.info.avgRating > 4
-            );
-            setFilteredRestaurants(filteredList);
-          }}
-        >
-          Top Rated Restaurant
-        </button>
+            className="px-4 py-2 bg-gray-100 rounded-lg"
+            onClick={() => {
+              // Filter logic here
+              const filteredList = listOfRestaurants.filter(
+                (res) => res.info.avgRating > 4
+              );
+              setFilteredRestaurants(filteredList);
+            }}
+          >
+            Top Rated Restaurant
+          </button>
+        </div>
+        <div className="m-4 p-4 flex justify-end ">
+          <label className="mr-2">Username:</label>
+          <input className="border border-black px-2" value={loggedInUser} onChange={(e)=>{setUserInfo({name : e.target.value})}} />
         </div>
       </div>
       <div className="flex flex-wrap">
@@ -97,7 +105,11 @@ const Body = () => {
           <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
             {" "}
             {/**The key should be at parent where we are iterating */}
-            <RestaurantCard res={res} />
+            {true ? (
+              <RestaurantCardPromoted res={res} />
+            ) : (
+              <RestaurantCard res={res} />
+            )}
           </Link>
         ))}
       </div>
