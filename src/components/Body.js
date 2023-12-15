@@ -57,6 +57,7 @@ const Body = () => {
           <input
             type="text"
             className="border border-solid border-black"
+            data-testid="searchInput"
             placeholder="KFC"
             value={searchText}
             onChange={(e) => {
@@ -105,7 +106,7 @@ const Body = () => {
           <Link key={res.info.id} to={"/restaurants/" + res.info.id}>
             {" "}
             {/**The key should be at parent where we are iterating */}
-            {true ? (
+            {false ? (
               <RestaurantCardPromoted res={res} />
             ) : (
               <RestaurantCard res={res} />

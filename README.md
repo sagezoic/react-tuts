@@ -1,104 +1,120 @@
 ﻿# react-tuts
 
-# Episode 12
-- Redux Toolkit
-- react-redux package
-- Redux Store, Actions/Reducers, useSelector, useDispatch.
-- Interview Questions around Redux.
-- Best practices while using Redux.
-- Redux Dev tools
+# Episode 13
+- Testing your app
+- JEST framework
 
-# Redux
-- Redux works in the data layer of react application
-- Redux is not mandatory, use it only when required. All the application that are build using redux can be build without it also.
-- Redux and React are different libraries.
-- Alternative to Redux, zustand state management library 
-- Advantages of Redux:
-    - Used for handling state of application
-    - Using this our application becomes easier to debug, Redux offers easy debugging
-- Redux offers two libraries to us:
-    - React-Redux: Bridge between the react and redux
-    - Redux-Toolkit: Latest way to write the code
+# Why Testing?
+- Even if we write one single line of code anywhere in our app, that may cause bug somewhere else in our app.
+- WE SHOULD BE WORRY ABOUT EVERY SINGLE LINE OF THE CODE THAT WE WRITE IN OUR APP.
+- Testing is very very important in our app, it will become more important when it comes to large scale application.
 
-# Vanilla Redux vs Redux Toolkit (RTK)
-- Redux toolkit came to solve three concerns related to redux
-    - Configuring a Redux store is too complicated
-    - I have to add a lot of packages to get Redux to do anything useful
-    - Redux requires too much boiler plate code
+# Types of Testing (Developer)
+- Manual Testing
+- Unit Testing: You test your react component in isolation. Testing one component in isolation.
+- Integration Testing: In integration testing, there are multiple components and they are talking to each other and they develop a flow and action in our react application and that we will test.
+- End-to-End Testing - e2e Testing: From user landing to our app to leaving our app. Simulating what the user will do throughout the app.
+- As a developer we are majorly concerned about the first two types of testing.
 
-# Redux Store
-- It is not a problem if we create a really big object in redux store.
-- We have slices(small portion of redux store) inside redux store which helps not ti make our redux store clumsy and big by storing everything inside a single object.
-- To make our data separate we make logical partition known as slice. E.g Theme slice, cart slice, user slice.
-- Redux says you can't directly modify card slice, there is a way through which you can modify data inside slice.
-- As you click on icon you have to dispatch a action, after it calls a function and the function modifies the cart. This function is known as reducer.
-- When you click on the add button, it dispatches an action and it calls the reducer function which updates the slice of the redux store.
-- To read the data from store we will use selector, and this selector will modify our UI.
-- Subscribing to the store. Subscribed to the store = sync with the stores. E.g Header component has subscribed to the store.
-- Header component is subscribed to the store using selector. As the value in store changes it will automatically update UI.
+# Testing Library
+- React Testing Library: It is the standard way of writing test cases for your app
+- History of React Testing Library: There used to be DOM Testing Library, and from there they have developed a specific library for testing react only. And they have similar libraries to test other frameworks too.
+- React Testing Library is built on DOM Testing Library.
+- React Testing Library also uses a framework called JEST which is a delightful JS Testing Framework.
+- JEST is a standard to write test cases when it comes to JS.
+- JEST internally uses Babel.
+- So, we will be needing React Testing Library and JEST.
+- React Testing Library: npm install -D @testing-library/react
+- Jest: npm install -D jest
 
-# Redux Toolkit
-- Install 
-    - @reduxjs/toolkit (they have kept the name for their library this way maybe they have thought it is cool)
-    - react-redux
-- Build our store
-- Connect our store to app
-- Create a slice(cartSlice)
-- dispatch(action)
-- read data using selector
+# JEST
+- We are going to use JEST along with babel, so we will also require few other dependencies too
+- https://jestjs.io/docs/getting-started
+- Since, parcel also uses the Babel internally so we have to make some changes so that it can work with the testing library. It happens because parcel have its own configuration for babel and now we are trying to add extra configuration, so parcel gets confused.
+- Read it: https://parceljs.org/languages/javascript/#babel
+- 
 
-# Creating your own store
-- We will create our own store inside the utils folder
-- configureStore form "@reduxjs/toolkit" : used to create a redux store
-- Add store to your app: we will be needing "provider" from "react-redux", add it to root element of your app.
-- So, this "provider" will act as a bridge between your react app and the redux store. It is redux-react package to make store communicate to our app.
-- You just have to wrap the portion of your app to access the store inside this Provider tag.
-- Just like the React Context provider we have Redux store provider.
-- Creating a slice:
-    - To create a cartSlice we will use a function, createSlice() from "@reduxjs/toolkit", it comes from this library because this is something which is related to redux.
-    - This function takes configuration to create a slice.
-    - In these configuration we have the reducer function corresponding to the actions for the slice.
-    - Reducer is again an object and now we will write reducer function corresponding to each action.
-    - E.g. of actions: you can add an item, you can remove an item, you can clear the cart, so these things are actions. You can think of them as small apis to communicate with redux store.
-    - E.g. addItem: reducerFn(),
-    - Reducer function will actually, modifies the data inside the slice.
-    - Now, we have to export our actions and reducers from the slice. We will do it with "export default cartSlice.reducer"
-- Now, we have to add this cartReducer to our appStore reducer. appStore reducer will have multiple reducers from different slice.
-- We will subscribe to the store via selector
-- We will dispatch our actions through the useDispatch() hook.
-    dispatch(addItems("pizza"));
-    {
-        payload: "pizza"
-    } This done automatically by the React-Redux.
-- Whatever you send it from the above statement it will be received by the reducer of respective action. You can then access the input using action.payload (as the above object is received in action)
-- using the useSelector hook helps to read the contents in the store. And you have to pass the contents you want to access.
+# Setting up the testing
+- Install React Testing Library
+- Installed JEST
+- Installed Babel Dependencies
+- Configure Babel
+- Configure Parcel Config file to disable default babel transpilation
+- JEST Configuration: npx jest --init
 
-# Reading the card info
-- You have to subscribe to the store
+# JSDOM
+- When you run test cases there is no server running, no browser running. They need an environment to run, they need a runtime where testing code will be executed. For that we uses jsdom.
+- JSDOM is a library which parses and interacts with assembled HTML just like a browser. The benefit is that it isn't actually a browser. Instead, it implements web standards like browsers do. You can feed it some HTML, and it will parse that HTML.
+- npm install --save-dev jest-environment-jsdom (note: --save-dev is same as -D)
 
-# Redux Interview Question
-- If you don't subscribe to the correct portion of the store, it will be a big performance loss.
-    Way 1: const cartItems = useSelector((store)=>store.cart.items);
-    Way 2: const store = useSelector((store)=>store)
-           const cartItems = store.cart.items
-    - In the way 2 you are subscribing to the big portion of the store but in way 1 only to a portion of the store. The way 2 will work fine but it is really work inefficient.
-    - This happens because, in way 2 the store is subscribed to the react redux store. Whenever anything changes inside the store your cart component get to know, so any change in our store will get to know by the component and it will affect this component as we have subscribed the store from here.
-    - So, never ever subscribe to the whole store, only subscribe to the portion of the store which you need in the component.
-    - useSelector: "The name is selector because you are selecting a portion of the store."
-- When you are creating store for your app, it will have one reducer for the whole app and it can contain multiple small reducers. But when you are creating storeSlice it will have multiple small reducer functions. There we can have multiple reducers.
+# Basics of Testing
+- __tests__ .js/.ts files will be considered as a test file
+- Headers.test.js/ Headers.test.ts/ Headers.spec.js, Headers.spec.ts all these files will be considered as test files.
+- __ it is known as dunder, we create folder with this name as it is rare that someone will create 
 
-# Redux Dev Tools
-- Redux is used for very large scale applications
+# Writing a test case
+- test("description of your test", function_to_test)
+- In every test we expect an assertion (expect().toBe()).
+- Even if you write empty test case it will work (i.e. it will pass the test).
 
-# RTK Query
-- Learn about it from the RTK docs
-- In the older versions of redux to make api call we used to use middleware, redux-thung, etc. but now with RTK we have RTK Query.
-- https://redux-toolkit.js.org/rtk-query/overview
+# Running test cases
+- To run test cases we can use npm run test
 
-# When you do google search Entities involved:
+# Writing test cases in React
+- You will need render() from @testing-library/react to render the react component.
+- We will use screen.getByRole() to get a rendered element
+- Getting error: Add @babel/preset-react
+- We have to add above library in our application because JSX is not working. So, to make JSX work in test cases. Command: npm i -D @babel/preset-react 
+- Include @babel/preset-react inside babel config
+- This babel preset-react is helping our testing library (react-testing-library) to convert the JSX code to HTML so that it can read properly.
+- Now, try again running the app. But it will fail again, error "toBeInTheDocument is not a function".
+- This error is coming because we haven't installed a library. So, we have to take help from one more library, npm i -D @testing-library/jest-dom
+- Test Cases : Render --> Query --> Assert
 
-1. DNS resolution
-2. TCP three-way handshake
-3. HTTP Request/Response
-4. HTTPS upgrade
-5. Browser renders server response
+# Grouping Test Cases
+- You can group multiple test cases inside describe block
+- Everything works same as working individual test cases
+- You can have nesting of describe block
+- Jest tells you that you can name the test() block as it() also. There is no difference between test and it, they are just alias of each other.
+- They name it like this just because "it" is easier to read with the message "Should...."
+- It is recommended to use one of the two conventions.
+
+# Testing the Header
+- The js-dom understands the JSX but it doesn't understand the react-redux code. 
+- So, as we are running the test cases in isolation it is throwing error to resolve it we have to provide the redux store to it.
+- Now, the next error it will throw, it is not able to understand the Link. To resolve it you have to wrap your component around the BrowserRouter.
+- fireEvent: with this you can perform an action while testing
+
+# Testing Restaurant Card
+- test component which is expecting props.
+- to pass this prop we will be requiring some mock data {Mocks}.
+- H/W: Write test case for the "with promoted label".
+
+# Testing multiple components- Integration Testing - Search Flow
+- When you will try to run your test case to test Body, it is going to throw error "fetch is not defined". It is because fetch is a browser API, it is not in the JS DOM (which is a browser like thing). So, it doesn't understand the fetch. So, we have to fake the fetch, writing mockFetch function.
+- You can define a global mock function using the function given by jest jest.fn().
+- These test cases can't make any actual api calls, cuz they are working in a browser like environment rather than browser.
+- You can add "watch-test": "jest --watch" so that your test cases will be automatically run after any change.
+- Whenever you have any async operation or state update wrap render into act fxn which comes from 'react-dom/test-utils'.
+- When you don't have anything to search on you can use data-testid, give it to your tag and you can select you tag by it.
+- Use fireEvent.change() to change a element.
+- You can use fireEvent to do some kind of event in jsdom.
+
+# Writing Last Testing Suit
+- beforeAll(callback fx) : This function will be called before running all the test.
+- beforeEach(callback fx) : This function will be called every time before running each the test. This is very helpful if you have to do some cleanup task.
+- afterAll(callback fx) : It will run after completing all the test. It is called when all the test cases are done.f
+- afterEach(callback fx) : This is called after each test.
+- These all are helper functions,
+
+# Setting up Testing in our app
+- Install React Testing Library
+- Installed jest
+- Installed Babel dependencies
+- Configure Babel 
+- Configure Parcel Config file to disable default babel transpilation 
+- Jest  - npx jest --init
+- Install jsdom library
+- Install @babel/preset-react - to make JSX work in test cases
+- Include @babel/preset-react inside my babel config
+- npm i -D @testing-library/jest-dom
